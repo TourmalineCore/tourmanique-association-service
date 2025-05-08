@@ -1,6 +1,6 @@
 import json
 
-from model.model_result_schema import ModelResultSchema
+from config.model_config import processing_result_event_name
 
 
 class MessagePacker:
@@ -13,20 +13,13 @@ class MessagePacker:
         message = json.loads(message_str)
 
         photo_id = message["photo_id"]
-        tags = message["tags"]
-        tags_without_semicolon_in_objects = []
 
-        for tag in tags:
-            tags_without_semicolon_in_objects.append(tag.split(';')[0])
+        return photo_id
 
-        return photo_id, ' '.join(tags_without_semicolon_in_objects)
-
-    def pack_the_message_body(self, photo_id: int, result):
-        valid_result = ModelResultSchema(
-            photo_id=photo_id,
-            model_type=self.model_type,
-            result=result,
-        )
-        message_body = json.dumps(valid_result.dict()).encode('utf-8')
+    def pack_the_result_message_body(self, photo_id: int):
+        message_body = {
+                'photo_id': photo_id,
+                'event': processing_result_event_name,
+            }
 
         return message_body

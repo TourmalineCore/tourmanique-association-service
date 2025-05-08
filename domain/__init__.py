@@ -1,0 +1,2 @@
+from domain.associations.association import Association
+from domain.photo_association.photo_association import PhotoAssociation

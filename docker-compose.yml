@@ -2,14 +2,15 @@ version: '3.8'
 
 services:
   run-model-locally:
-    container_name: association-model-local-starter
+    container_name: associations-model-local-starter
     restart: "no"
-    image: tianon/true
+    image: tianon/true:multiarch
     depends_on:
-      - association-model
+      - associations-model
 
-  association-model:
-    container_name: association-model
+  associations-model:
+    container_name: associations-model
+    command: poetry run flask run
     build:
       context: .
     restart: unless-stopped
@@ -18,8 +19,36 @@ services:
     env_file:
       - .env
     networks:
-      - tourmanique-api-private_tourmanique-net
+      - tourmanique-api_tourmanique-net
+      - internal
+    depends_on:
+      - associations-model-postgres
+    ports:
+      - "7551:5000"
+
+  associations-model-postgres:
+      container_name: associations-model-postgres
+      image: postgres:13.3-alpine
+      restart: always
+      volumes:
+        - associations-model-postgres-data:/var/lib/postgresql/data/
+      healthcheck:
+        test: "pg_isready -U $$POSTGRES_USER"
+        timeout: 10s
+        interval: 10s
+        retries: 3
+      networks:
+        - tourmanique-api_tourmanique-net
+        - internal
+      env_file:
+        - .env
+      ports:
+        - "7550:5432"
 
 networks:
-  tourmanique-api-private_tourmanique-net:
+  internal: {}
+  tourmanique-api_tourmanique-net:
     external: true
+
+volumes:
+  associations-model-postgres-data:

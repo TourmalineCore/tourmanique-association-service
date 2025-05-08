@@ -84,4 +84,8 @@ run: ## runs the api locally via **docker**
 
 .PHONY: test
 test: ## runs unit tests via **docker**
-	docker compose run --rm --no-deps association-model poetry run pytest -v
+	docker compose run --rm --no-deps associations-model poetry run pytest -v
+
+.PHONY: create-migration
+create-migration: ## create migration with <migration_name> via **docker**
+	docker compose -f docker-compose.yml run --rm --no-deps associations-model poetry run flask db migrate -m "$(MIGRATION_NAME)"
