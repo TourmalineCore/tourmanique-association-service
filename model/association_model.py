@@ -25,13 +25,9 @@ class AssociationModel(ProcessingModelBase, ABC):
 
     def process_data(self, sequence_to_classify):
         started_time = datetime.now()
-        print(sequence_to_classify)
-        print(CANDIDATE_LABELS)
         predict = MODEL(sequence_to_classify, CANDIDATE_LABELS, multi_label=True)
-        print(predict)
 
         result = [predict['labels'][i] for i in range(len(predict['labels'])) if predict['scores'][i] > 0.9]
-        print(result)
 
         ended_time = datetime.now()
         print(f'TIME:{ended_time - started_time}')

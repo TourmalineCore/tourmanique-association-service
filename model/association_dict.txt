@@ -36,7 +36,6 @@ emotion
 client
 friendship
 statement
-kind
 voice
 tea
 personality
@@ -371,13 +370,10 @@ horrific
 huge
 hungry
 hurt
-icy
-ideal
 irritable
 itchy
 jealous
 jittery
-jolly
 icy
 ideal
 jolly
